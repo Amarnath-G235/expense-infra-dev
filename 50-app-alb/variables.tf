@@ -14,11 +14,12 @@ variable "common_tags" {
   }
 }
 
-variable "rds_tags" {
+variable "app_alb_tags" {
   default = {
-    component = "mysql"
+    component = "app_alb"
   }
 }
+
 
 variable "zone_name" {
   default = "ukom81s.online"
