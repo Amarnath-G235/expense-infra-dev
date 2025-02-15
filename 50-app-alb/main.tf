@@ -16,7 +16,7 @@ module "app_alb" {
 }
 
 # HTTP listener rules
-resource "aws_lb_listener" "front_end" {
+resource "aws_lb_listener" "http" {
   load_balancer_arn = module.app_alb.arn # arn : amazon resource name
   port              = "80"
   protocol          = "HTTP"

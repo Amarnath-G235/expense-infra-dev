@@ -151,3 +151,19 @@ resource "aws_autoscaling_policy" "backend" {
     target_value = 70.0
   }
 }
+
+resource "aws_lb_listener_rule" "backend" {
+  listener_arn = local.app_alb_listener_arn
+  priority     = 100 # low priority will be evaluated first
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.backend.arn
+  }
+
+  condition {
+    host_header {
+      values = ["${var.backend_tags.component}.app-${var.environment}.${var.zone_name}"]
+    }
+  }
+}
