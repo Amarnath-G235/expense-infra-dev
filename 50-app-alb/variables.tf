@@ -24,3 +24,9 @@ variable "app_alb_tags" {
 variable "zone_name" {
   default = "ukom81s.online"
 }
+
+variable "backend_tags" {
+  default = {
+    component = "backend"
+  }
+}

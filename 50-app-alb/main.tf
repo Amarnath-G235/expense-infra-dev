@@ -40,7 +40,7 @@ module "records" {
 
   records = [
     {
-      name    = "app-${var.environment}" # *.app-dev.ukom81s.online
+      name    = "${var.backend_tags.component}.app-${var.environment}" # *.app-dev.ukom81s.online
       type    = "A"
       alias   = {
         name    = module.app_alb.dns_name

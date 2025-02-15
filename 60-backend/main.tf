@@ -115,12 +115,22 @@ resource "aws_autoscaling_group" "backend" {
   health_check_grace_period = 60
   health_check_type         = "ELB"
   desired_capacity          = 2
+  target_group_arns         = ["aws_lb_target_group.backend.arn"]
   #force_delete              = true
   launch_template {
     id      = aws_launch_template.backend.id
     version = "$Latest"
   }
+
   vpc_zone_identifier       = [local.private_subnet_id]
+
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 50
+    }
+    triggers = ["launch_template"]
+  }
 
   tag {
     key                 = "Name"
