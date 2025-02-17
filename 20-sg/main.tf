@@ -64,6 +64,17 @@ module "app_alb_sg" {
     sg_tags = var.app_alb_sg_tags
 }
 
+module "web_alb_sg" {
+    source = "git::https://github.com/Amarnath-G235/terraform-aws-security-group.git?ref=main"
+    project_name = var.project_name
+    environment = var.environment
+    sg_name = "web-alb" # expense-dev-web-alb
+    # vpc_id  = data.aws_ssm_parameter.vpc_id.value
+    vpc_id = local.vpc_id
+    common_tags = var.common_tags
+    sg_tags = var.web_alb_sg_tags
+}
+
 module "vpn_sg" {
     source = "git::https://github.com/Amarnath-G235/terraform-aws-security-group.git?ref=main"
     project_name = var.project_name
@@ -252,4 +263,23 @@ resource "aws_security_group_rule" "backend_vpn_8080" {
   protocol          = "tcp"
   source_security_group_id = module.vpn_sg.id
   security_group_id = module.backend_sg.id 
+}
+
+
+resource "aws_security_group_rule" "web_alb_hhtp" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = module.web_alb_sg.id 
+}
+
+resource "aws_security_group_rule" "web_alb_hhtps" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = module.web_alb_sg.id 
 }
